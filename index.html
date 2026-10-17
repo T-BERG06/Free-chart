@@ -16,6 +16,10 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
 body { background: var(--bg-main); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
+/* MAIN VIEWS */
+.view-section { display: none; flex-direction: column; height: 100%; width: 100%; }
+.view-section.active { display: flex; }
+
 /* TOP HEADER */
 .header { background: var(--bg-header); padding: 15px 16px 10px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; z-index: 10; }
 .header h1 { font-size: 22px; font-weight: 600; color: var(--text-main); }
@@ -26,14 +30,16 @@ body { background: var(--bg-main); color: var(--text-main); height: 100vh; displ
 .search-bar { padding: 0 16px 10px; background: var(--bg-header); }
 .search-input { width: 100%; background: var(--bg-main); border: none; border-radius: 20px; padding: 10px 15px; color: var(--text-main); font-size: 14px; outline: none; }
 
-/* TABS */
+/* TABS (All, Unread...) */
 .tabs { display: flex; gap: 10px; padding: 0 16px 10px; background: var(--bg-header); overflow-x: auto; }
 .tabs::-webkit-scrollbar { display: none; }
 .tab { padding: 6px 12px; background: rgba(255,255,255,0.05); border-radius: 15px; font-size: 13px; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
 .tab.active { background: #103529; color: var(--accent); font-weight: 600; }
 
-/* CHAT LIST */
+/* CONTENT AREA */
 .content { flex: 1; overflow-y: auto; background: var(--bg-main); }
+
+/* CHAT LIST */
 .chat-item { display: flex; align-items: center; padding: 12px 16px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.02); }
 .chat-item:hover { background: rgba(255,255,255,0.03); }
 .avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--bg-header); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-muted); margin-right: 15px; flex-shrink: 0; background-size: cover; background-position: center; }
@@ -44,10 +50,10 @@ body { background: var(--bg-main); color: var(--text-main); height: 100vh; displ
 .chat-meta { text-align: right; font-size: 12px; color: var(--text-muted); margin-left: 10px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
 
 /* FLOATING BUTTON */
-.fab { position: fixed; bottom: 30px; right: 20px; width: 60px; height: 60px; background: var(--accent); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,168,132,0.4); cursor: pointer; z-index: 50; }
+.fab { position: fixed; bottom: 80px; right: 20px; width: 60px; height: 60px; background: var(--accent); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,168,132,0.4); cursor: pointer; z-index: 50; }
 .fab svg { width: 28px; height: 28px; fill: white; }
 
-/* MODALS & PAGES */
+/* MODALS */
 .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
 .modal.active { display: flex; }
 .modal-box { width: 100%; max-width: 400px; background: var(--bg-header); padding: 25px; border-radius: 15px; text-align: center; }
@@ -67,19 +73,18 @@ body { background: var(--bg-main); color: var(--text-main); height: 100vh; displ
 .msg-out { background: var(--bg-msg-out); align-self: flex-end; border-top-right-radius: 0; }
 .msg-in { background: var(--bg-msg-in); align-self: flex-start; border-top-left-radius: 0; }
 .msg-time { font-size: 10px; color: rgba(255,255,255,0.6); float: right; margin: 4px 0 -4px 8px; }
-.msg-sender { font-size: 12px; font-weight: bold; color: var(--accent); margin-bottom: 4px; }
 .chat-input-area { background: var(--bg-header); padding: 10px 16px; display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
 .chat-input { flex: 1; background: var(--bg-main); border: none; border-radius: 20px; padding: 12px 16px; color: var(--text-main); outline: none; font-size: 15px; }
 .send-btn { background: var(--accent); border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
 .send-btn svg { width: 18px; height: 18px; fill: black; margin-left: -2px; }
 
-/* TICKS (SVG Icons) */
+/* TICKS */
 .tick-icon { width: 16px; height: 16px; fill: rgba(255,255,255,0.6); vertical-align: middle; margin-left: 4px; }
 .tick-icon.blue { fill: var(--tick-blue); }
 
-/* SETTINGS */
-.settings-page, .sub-page { display: none; flex-direction: column; height: 100%; background: var(--bg-main); position: fixed; inset: 0; z-index: 200; }
-.settings-page.active, .sub-page.active { display: flex; }
+/* SETTINGS SUB PAGES */
+.sub-page { display: none; flex-direction: column; height: 100%; background: var(--bg-main); position: fixed; inset: 0; z-index: 200; }
+.sub-page.active { display: flex; }
 .settings-header { background: var(--bg-header); padding: 15px 16px; display: flex; align-items: center; gap: 15px; }
 .settings-header h2 { font-size: 18px; font-weight: 600; }
 .settings-body, .sub-content { flex: 1; overflow-y: auto; padding-bottom: 20px; }
@@ -104,10 +109,10 @@ body { background: var(--bg-main); color: var(--text-main); height: 100vh; displ
 input:checked + .slider { background-color: var(--accent); }
 input:checked + .slider:before { transform: translateX(20px); }
 
-/* BOTTOM NAV */
-.bottom-nav { display: flex; background: var(--bg-header); padding: 10px 0; justify-content: space-around; }
-.nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 12px; cursor: pointer; }
-.nav-item.active { color: var(--accent); }
+/* BOTTOM NAV (ZOTE CHINI) */
+.bottom-nav { display: flex; background: var(--bg-header); padding: 10px 0; justify-content: space-around; border-top: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; cursor: pointer; padding: 5px 15px; border-radius: 20px; transition: 0.3s; }
+.nav-item.active { color: var(--accent); background: rgba(0, 168, 132, 0.1); }
 .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
 </style>
 </head>
@@ -117,7 +122,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 <div id="loginModal" class="modal active">
   <div class="modal-box">
     <h2>FREE CHART</h2>
-    <p>Weka jina lako na namba yako kuanza kuchat na marafiki zako.</p>
+    <p>Weka jina lako na namba yako kuanza kuchat.</p>
     <input type="text" id="usernameInput" placeholder="Jina lako..." />
     <input type="tel" id="phoneInput" placeholder="Namba yako (+255...)" />
     <button onclick="login()">Ingia</button>
@@ -128,81 +133,69 @@ input:checked + .slider:before { transform: translateX(20px); }
 <div id="newChatModal" class="modal">
   <div class="modal-box">
     <h2>Anza Chat Mpya</h2>
-    <p>Weka namba ya simu ya mtu uliye nayo WhatsApp ili uanze kuchat naye kupitia app hii.</p>
+    <p>Weka namba ya simu ili uanze kuchat.</p>
     <input type="tel" id="newChatNumber" placeholder="+255..." />
     <button onclick="startNewChat()">Anza Kuchat</button>
     <button class="btn-cancel" onclick="document.getElementById('newChatModal').classList.remove('active')">Ghairi</button>
   </div>
 </div>
 
-<!-- DASHBOARD (CHATS) -->
-<div id="dashboardView">
-  <!-- TOP HEADER -->
+<!-- ================= CHATS VIEW ================= -->
+<div id="chatsView" class="view-section active">
   <div class="header">
     <h1>Free Chart</h1>
-    <div class="header-icons">
-      <svg viewBox="0 0 24 24" onclick="openSettings()"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
-    </div>
   </div>
-  
-  <div class="search-bar">
-    <input type="text" class="search-input" placeholder="Ask or Search" />
-  </div>
-
+  <div class="search-bar"><input type="text" class="search-input" placeholder="Ask or Search" /></div>
   <div class="tabs">
-    <div class="tab active">All</div>
-    <div class="tab">Unread</div>
-    <div class="tab">Favorites</div>
-    <div class="tab">Groups</div>
+    <div class="tab active">All</div><div class="tab">Unread</div><div class="tab">Favorites</div><div class="tab">Groups</div>
   </div>
-
   <div class="content">
     <div id="chatList"></div>
-    <div class="fab" onclick="document.getElementById('newChatModal').classList.add('active')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-    </div>
   </div>
+  <div class="fab" onclick="document.getElementById('newChatModal').classList.add('active')">
+    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+  </div>
+</div>
 
-  <div class="bottom-nav">
-    <div class="nav-item active">
-      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-      Chats
-    </div>
-    <div class="nav-item">
-      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      Updates
-    </div>
-    <div class="nav-item">
-      <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-      Communities
+<!-- ================= UPDATES (STATUS) VIEW ================= -->
+<div id="updatesView" class="view-section">
+  <div class="header"><h1>Updates</h1></div>
+  <div class="content">
+    <div style="padding: 20px;">
+      <div style="display:flex; align-items:center; gap:15px; margin-bottom: 20px; cursor:pointer;">
+        <div class="avatar" style="border: 2px dashed var(--accent); position:relative;">
+          <svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:var(--accent);"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        </div>
+        <div>
+          <div class="chat-name">Status Yangu</div>
+          <div class="chat-msg">Bonyeza kuongeza update</div>
+        </div>
+      </div>
+      <h3 style="color: var(--text-muted); font-size:14px; margin-bottom: 15px;">Recent Updates</h3>
+      <div style="text-align: center; color: var(--text-muted); font-size: 13px; margin-top: 30px;">
+        Hakuna status mpya kutoka kwa marafiki zako.
+      </div>
     </div>
   </div>
 </div>
 
-<!-- CHAT ROOM -->
-<div id="chatRoom" class="chat-room">
-  <div class="chat-header">
-    <div class="back-btn" onclick="closeChat()"><svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div>
-    <div class="avatar" id="roomAvatar" style="width: 36px; height: 36px; font-size: 14px;">A</div>
-    <div class="chat-info">
-      <div class="chat-name" id="roomName">Mtu</div>
-      <div class="online-status" id="roomStatus">offline</div>
+<!-- ================= COMMUNITIES (GROUPS) VIEW ================= -->
+<div id="communitiesView" class="view-section">
+  <div class="header"><h1>Communities</h1></div>
+  <div class="content">
+    <div style="padding: 20px; text-align: center; margin-top: 50px;">
+      <svg viewBox="0 0 24 24" style="width: 60px; height: 60px; fill: var(--text-muted); margin-bottom: 15px;"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      <h2 style="color: var(--text-main); margin-bottom: 10px;">Karibu Communities</h2>
+      <p style="color: var(--text-muted); font-size: 14px;">Hapa utaweza kuunda na kujiunga na makundi (Groups) mbalimbali ili kuchat na watu wengi kwa pamoja.</p>
+      <button style="margin-top: 20px; padding: 12px 20px; border-radius: 20px; border: none; background: var(--accent); color: black; font-weight: bold; cursor:pointer;" onclick="alert('Kipengele hiki kinakuja hivi karibuni!')">Unda Group Jipya</button>
     </div>
-  </div>
-  <div class="chat-messages" id="messagesContainer"></div>
-  <div class="chat-input-area">
-    <input type="text" class="chat-input" id="msgInput" placeholder="Message" onkeypress="handleEnter(event)" />
-    <button class="send-btn" onclick="sendMessage()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
   </div>
 </div>
 
-<!-- SETTINGS PAGE -->
-<div id="settingsPage" class="settings-page">
-  <div class="settings-header">
-    <div class="back-btn" onclick="closeSettings()" style="cursor:pointer; color:var(--text-main);"><svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div>
-    <h2>Settings</h2>
-  </div>
-  <div class="settings-body">
+<!-- ================= SETTINGS VIEW ================= -->
+<div id="settingsView" class="view-section">
+  <div class="header"><h1>Settings</h1></div>
+  <div class="content">
     <div class="profile-section" onclick="openSubPage('profileSubPage')">
       <div class="profile-avatar" id="settingsAvatar">T</div>
       <div class="profile-name" id="settingsName">T-BERG</div>
@@ -225,7 +218,24 @@ input:checked + .slider:before { transform: translateX(20px); }
   </div>
 </div>
 
-<!-- SUB PAGES -->
+<!-- CHAT ROOM (INAFUNGUKA JUU YA VITU VINGINE) -->
+<div id="chatRoom" class="chat-room">
+  <div class="chat-header">
+    <div class="back-btn" onclick="closeChat()"><svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div>
+    <div class="avatar" id="roomAvatar" style="width: 36px; height: 36px; font-size: 14px;">A</div>
+    <div class="chat-info">
+      <div class="chat-name" id="roomName">Mtu</div>
+      <div class="online-status" id="roomStatus">offline</div>
+    </div>
+  </div>
+  <div class="chat-messages" id="messagesContainer"></div>
+  <div class="chat-input-area">
+    <input type="text" class="chat-input" id="msgInput" placeholder="Message" onkeypress="handleEnter(event)" />
+    <button class="send-btn" onclick="sendMessage()"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
+  </div>
+</div>
+
+<!-- SUB PAGES (ZINAFUNGUKA KUTOKA SETTINGS) -->
 <div id="profileSubPage" class="sub-page">
   <div class="settings-header"><div class="back-btn" onclick="closeSubPage('profileSubPage')" style="cursor:pointer; color:var(--text-main);"><svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div><h2>Profile</h2></div>
   <div class="sub-content">
@@ -239,7 +249,6 @@ input:checked + .slider:before { transform: translateX(20px); }
       <p style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">Bonyeza picha kubadilisha</p>
     </div>
     <label>Jina Lako</label><input type="text" id="inputProfileName" />
-    <label>About</label><input type="text" id="inputProfileAbout" value="Hey there! I am using Free Chart." />
     <button onclick="saveProfile()">Hifadhi</button>
   </div>
 </div>
@@ -252,6 +261,26 @@ input:checked + .slider:before { transform: translateX(20px); }
   <div class="sub-content">
     <div class="toggle-row"><span>Read Receipts</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
     <div class="toggle-row"><span>Nionekane Nikiwa Online</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
+  </div>
+</div>
+
+<!-- ================= BOTTOM NAVIGATION BAR (ZOTE CHINI) ================= -->
+<div class="bottom-nav">
+  <div class="nav-item active" onclick="switchMainTab('chats')" id="nav-chats">
+    <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+    Chats
+  </div>
+  <div class="nav-item" onclick="switchMainTab('updates')" id="nav-updates">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+    Updates
+  </div>
+  <div class="nav-item" onclick="switchMainTab('communities')" id="nav-communities">
+    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+    Communities
+  </div>
+  <div class="nav-item" onclick="switchMainTab('settings')" id="nav-settings">
+    <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+    Settings
   </div>
 </div>
 
@@ -272,7 +301,6 @@ const db = firebase.firestore();
 let currentUser = "";
 let currentUserPhone = "";
 let currentRoomId = "";
-let currentReceiver = "";
 let unsubscribeMessages = null;
 
 // LOGIN
@@ -289,12 +317,12 @@ function login() {
   localStorage.setItem("freechart_phone", phone);
   
   document.getElementById("loginModal").classList.remove("active");
-  
   document.getElementById("settingsName").textContent = name;
   document.getElementById("inputProfileName").value = name;
   document.getElementById("inputAccountPhone").value = "+" + phone;
   
   renderChatList();
+  setupPresence();
 }
 
 // CHECK LOGIN
@@ -306,6 +334,28 @@ if (localStorage.getItem("freechart_user")) {
   document.getElementById("inputProfileName").value = currentUser;
   document.getElementById("inputAccountPhone").value = "+" + currentUserPhone;
   renderChatList();
+  setupPresence();
+}
+
+// TAB SWITCHING (BOTTOM NAVIGATION)
+function switchMainTab(tabName) {
+  // Ficha zote
+  document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  
+  // Onyesha ile iliyobonyezwa
+  document.getElementById(tabName + 'View').classList.add('active');
+  document.getElementById('nav-' + tabName).classList.add('active');
+}
+
+// PRESENCE (ONLINE/OFFLINE)
+function setupPresence() {
+  const presenceRef = db.collection("presence").doc(currentUserPhone);
+  presenceRef.set({ isOnline: true }, { merge: true });
+  
+  window.addEventListener('beforeunload', () => {
+    presenceRef.set({ isOnline: false }, { merge: true });
+  });
 }
 
 // PICHA YA PROFILE
@@ -340,7 +390,6 @@ function renderChatList() {
         const chat = doc.data();
         const receiverPhone = chat.participants.find(p => p !== currentUserPhone);
         
-        // Ticks kwenye chat list
         let tickHTML = "";
         if (chat.lastSender === currentUserPhone) {
           if (chat.lastRead) {
@@ -395,14 +444,11 @@ function startNewChat() {
 // OPEN CHAT ROOM
 function openChatRoom(chatId, receiverPhone) {
   currentRoomId = chatId;
-  currentReceiver = receiverPhone;
   
-  document.getElementById("dashboardView").style.display = "none";
   document.getElementById("chatRoom").classList.add("active");
   document.getElementById("roomName").textContent = "+" + receiverPhone;
   document.getElementById("roomAvatar").textContent = receiverPhone.slice(-2);
   
-  // Angalia kama yupo online (Tunatumia documents kwenye collection "presence")
   db.collection("presence").doc(receiverPhone).onSnapshot(doc => {
     if(doc.exists && doc.data().isOnline) {
       document.getElementById("roomStatus").textContent = "online";
@@ -413,7 +459,6 @@ function openChatRoom(chatId, receiverPhone) {
     }
   });
 
-  // Weka yeye kama amesoma ujumbe (kama yupo kwenye chumba)
   db.collection("chats").doc(currentRoomId).update({ lastRead: true });
 
   const container = document.getElementById("messagesContainer");
@@ -437,14 +482,11 @@ function openChatRoom(chatId, receiverPhone) {
           time = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         }
 
-        // Ticks logic
         let tickHTML = "";
         if (isMe) {
           if (msg.read) {
-            // Tick mbili (Blue - Amesomea)
             tickHTML = `<svg class="tick-icon blue" viewBox="0 0 16 15"><path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"/></svg>`;
           } else {
-            // Tick moja (Imetumwa) au Tick mbili za kijivu (Imefika)
             tickHTML = `<svg class="tick-icon" viewBox="0 0 16 15"><path d="M10.91 3.316l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"/></svg>`;
           }
         }
@@ -455,7 +497,6 @@ function openChatRoom(chatId, receiverPhone) {
         `;
         container.appendChild(bubble);
         
-        // Kama ujumbe ni wa mtu mwingine na mimi nipo kwenye chumba, mark as read
         if (!isMe && !msg.read) {
            db.collection("chats").doc(currentRoomId).collection("messages").doc(doc.id).update({ read: true });
         }
@@ -466,7 +507,6 @@ function openChatRoom(chatId, receiverPhone) {
 
 function closeChat() {
   document.getElementById("chatRoom").classList.remove("active");
-  document.getElementById("dashboardView").style.display = "block";
   if(unsubscribeMessages) unsubscribeMessages();
 }
 
@@ -497,9 +537,7 @@ function handleEnter(e) {
   if (e.key === "Enter") sendMessage();
 }
 
-// SETTINGS NAVIGATION
-function openSettings() { document.getElementById("settingsPage").classList.add("active"); }
-function closeSettings() { document.getElementById("settingsPage").classList.remove("active"); }
+// SETTINGS SUB PAGES
 function openSubPage(id) { document.getElementById(id).classList.add("active"); }
 function closeSubPage(id) { document.getElementById(id).classList.remove("active"); }
 
@@ -522,6 +560,7 @@ function saveAccount() {
     localStorage.setItem("freechart_phone", phone);
     alert("Namba imehifadhiwa!");
     renderChatList();
+    setupPresence();
   }
 }
 
@@ -532,19 +571,6 @@ function logout() {
     localStorage.removeItem("freechart_phone");
     location.reload();
   }
-}
-
-// ============= PRESENCE SYSTEM (KUJUA NANI YUPO ONLINE) =============
-if (localStorage.getItem("freechart_phone")) {
-  const phoneNum = localStorage.getItem("freechart_phone");
-  const presenceRef = db.collection("presence").doc(phoneNum);
-  
-  presenceRef.set({ isOnline: true }, { merge: true });
-  
-  // Kama akifunga browser
-  window.addEventListener('beforeunload', () => {
-    presenceRef.set({ isOnline: false }, { merge: true });
-  });
 }
 </script>
 </body>
