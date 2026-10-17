@@ -68,7 +68,7 @@ body { background: var(--bg-main); color: var(--text-main); height: 100vh; displ
 .send-btn { background: var(--accent); border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
 .send-btn svg { width: 18px; height: 18px; fill: white; margin-left: -2px; }
 
-/* LOGIN MODAL (PHONE OTP) */
+/* LOGIN MODAL */
 .modal { display: none; position: fixed; inset: 0; background: var(--bg-main); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
 .modal.active { display: flex; }
 .login-box { width: 100%; max-width: 400px; text-align: center; }
@@ -76,8 +76,6 @@ body { background: var(--bg-main); color: var(--text-main); height: 100vh; displ
 .login-box p { color: var(--text-muted); font-size: 14px; margin-bottom: 20px; }
 .login-box input { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 8px; border: none; background: var(--bg-header); color: white; font-size: 16px; outline: none; text-align: center; }
 .login-box button { width: 100%; padding: 14px; border-radius: 8px; border: none; background: var(--accent); color: white; font-size: 16px; font-weight: 600; cursor: pointer; }
-#otpSection { display: none; }
-#recaptcha-container { margin-bottom: 15px; display: flex; justify-content: center; }
 
 /* STATUS VIEW */
 .status-item { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 15px; cursor: pointer; }
@@ -91,20 +89,9 @@ body { background: var(--bg-main); color: var(--text-main); height: 100vh; displ
 <div id="loginModal" class="modal active">
   <div class="login-box">
     <h2>FREE CHART</h2>
-    <p>Weka namba yako ya simu kuanza</p>
-    
-    <div id="phoneSection">
-      <input type="tel" id="phoneNumber" placeholder="+2557XXXXXXXX" />
-      <button onclick="sendOTP()">Tuma Code</button>
-    </div>
-
-    <div id="otpSection">
-      <p>Weka code uliyotumiwa kwenye SMS</p>
-      <input type="text" id="otpCode" placeholder="123456" maxlength="6" />
-      <button onclick="verifyOTP()">Thibitisha</button>
-    </div>
-    
-    <div id="recaptcha-container"></div>
+    <p>Weka jina lako kuanza kuchat</p>
+    <input type="text" id="usernameInput" placeholder="Jina lako..." />
+    <button onclick="login()">Ingia</button>
   </div>
 </div>
 
@@ -137,7 +124,7 @@ body { background: var(--bg-main); color: var(--text-main); height: 100vh; displ
   <div id="callsView" class="view">
     <div style="padding: 20px; text-align: center; color: var(--text-muted); margin-top: 50px;">
       <svg viewBox="0 0 24 24" style="width: 60px; height: 60px; fill: currentColor; margin-bottom: 15px;"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
-      <p>Hakuna simu bado. (Inahitaji WebRTC Server)</p>
+      <p>Hakuna simu bado.</p>
     </div>
   </div>
 
@@ -176,7 +163,7 @@ body { background: var(--bg-main); color: var(--text-main); height: 100vh; displ
 </div>
 
 <script>
-// FIREBASE CONFIG MPYA (FREE-CHART)
+// FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyCazZiyRV8t44XDgqLfknluvomzzaX51NQ",
   authDomain: "free-chart-25d35.firebaseapp.com",
@@ -188,57 +175,34 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-const auth = firebase.auth();
 
-let currentUser = null;
+let currentUser = "";
 let currentRoomId = "";
-let confirmationResult = null;
 
+// DUMMY CONTACTS
 const contacts = [
   { id: "1", name: "Alex", msg: "Upo?", time: "12:30" },
   { id: "2", name: "Maria", msg: "Sawa nitakuja", time: "11:15" }
 ];
 
-window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-  'size': 'invisible',
-  'callback': (response) => {}
-});
-
-function sendOTP() {
-  const phone = document.getElementById("phoneNumber").value.trim();
-  if (!phone) return alert("Weka namba yako");
-  
-  auth.signInWithPhoneNumber(phone, window.recaptchaVerifier)
-    .then((result) => {
-      confirmationResult = result;
-      document.getElementById("phoneSection").style.display = "none";
-      document.getElementById("otpSection").style.display = "block";
-    }).catch((error) => {
-      alert("Error: " + error.message);
-    });
+// LOGIN
+function login() {
+  const name = document.getElementById("usernameInput").value.trim();
+  if (!name) return alert("Weka jina lako");
+  currentUser = name;
+  localStorage.setItem("freechart_user", name);
+  document.getElementById("loginModal").classList.remove("active");
+  renderContacts();
 }
 
-function verifyOTP() {
-  const code = document.getElementById("otpCode").value.trim();
-  if (!code || !confirmationResult) return alert("Weka code");
-  
-  confirmationResult.confirm(code).then((result) => {
-    currentUser = result.user;
-    document.getElementById("loginModal").classList.remove("active");
-    renderContacts();
-  }).catch((error) => {
-    alert("Code si sahihi: " + error.message);
-  });
+// CHECK IF ALREADY LOGGED IN
+if (localStorage.getItem("freechart_user")) {
+  currentUser = localStorage.getItem("freechart_user");
+  document.getElementById("loginModal").classList.remove("active");
+  renderContacts();
 }
 
-auth.onAuthStateChanged(user => {
-  if (user) {
-    currentUser = user;
-    document.getElementById("loginModal").classList.remove("active");
-    renderContacts();
-  }
-});
-
+// TABS
 function switchTab(tab, el) {
   document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
@@ -246,6 +210,7 @@ function switchTab(tab, el) {
   document.getElementById(tab + "View").classList.add("active");
 }
 
+// RENDER CONTACTS
 function renderContacts() {
   const list = document.getElementById("chatList");
   list.innerHTML = "";
@@ -267,6 +232,7 @@ function renderContacts() {
   });
 }
 
+// OPEN CHAT
 function openChat(contact) {
   currentRoomId = "room_" + contact.id;
   document.getElementById("chatRoom").classList.add("active");
@@ -281,7 +247,8 @@ function openChat(contact) {
       container.innerHTML = "";
       snapshot.forEach(doc => {
         const msg = doc.data();
-        const isMe = msg.senderId === currentUser.uid;
+        const isMe = msg.sender === currentUser;
+        
         const bubble = document.createElement("div");
         bubble.className = `msg-bubble ${isMe ? "msg-out" : "msg-in"}`;
         
@@ -292,7 +259,7 @@ function openChat(contact) {
         }
 
         bubble.innerHTML = `
-          ${!isMe ? `<div style="font-size: 12px; font-weight: bold; color: var(--accent); margin-bottom: 4px;">${msg.senderName || 'User'}</div>` : ''}
+          ${!isMe ? `<div style="font-size: 12px; font-weight: bold; color: var(--accent); margin-bottom: 4px;">${msg.sender}</div>` : ''}
           ${msg.text}
           <span class="msg-time">${time}</span>
         `;
@@ -307,6 +274,7 @@ function closeChat() {
   currentRoomId = "";
 }
 
+// SEND MESSAGE
 function sendMessage() {
   const input = document.getElementById("msgInput");
   const text = input.value.trim();
@@ -314,8 +282,7 @@ function sendMessage() {
 
   db.collection("messages").doc(currentRoomId).collection("chats").add({
     text: text,
-    senderId: currentUser.uid,
-    senderName: currentUser.phoneNumber,
+    sender: currentUser,
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
   }).then(() => {
     input.value = "";
