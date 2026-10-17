@@ -11,6 +11,7 @@
   --bg-main: #0b141a; --bg-header: #202c33; --bg-chat: #0b141a;
   --bg-msg-out: #005c4b; --bg-msg-in: #202c33; --text-main: #e9edef;
   --text-muted: #8696a0; --accent: #00a884; --danger: #ff4444;
+  --tick-blue: #53bdeb;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
 body { background: var(--bg-main); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
@@ -25,7 +26,7 @@ body { background: var(--bg-main); color: var(--text-main); height: 100vh; displ
 .search-bar { padding: 0 16px 10px; background: var(--bg-header); }
 .search-input { width: 100%; background: var(--bg-main); border: none; border-radius: 20px; padding: 10px 15px; color: var(--text-main); font-size: 14px; outline: none; }
 
-/* TABS (All, Unread, Groups) */
+/* TABS */
 .tabs { display: flex; gap: 10px; padding: 0 16px 10px; background: var(--bg-header); overflow-x: auto; }
 .tabs::-webkit-scrollbar { display: none; }
 .tab { padding: 6px 12px; background: rgba(255,255,255,0.05); border-radius: 15px; font-size: 13px; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
@@ -39,10 +40,10 @@ body { background: var(--bg-main); color: var(--text-main); height: 100vh; displ
 .chat-info { flex: 1; display: flex; justify-content: space-between; align-items: center; overflow: hidden; }
 .chat-info-left { flex: 1; overflow: hidden; }
 .chat-name { font-size: 16px; margin-bottom: 4px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.chat-msg { font-size: 14px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-msg { font-size: 14px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 4px;}
 .chat-meta { text-align: right; font-size: 12px; color: var(--text-muted); margin-left: 10px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
 
-/* FLOATING BUTTON (NEW CHAT) */
+/* FLOATING BUTTON */
 .fab { position: fixed; bottom: 30px; right: 20px; width: 60px; height: 60px; background: var(--accent); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,168,132,0.4); cursor: pointer; z-index: 50; }
 .fab svg { width: 28px; height: 28px; fill: white; }
 
@@ -66,12 +67,17 @@ body { background: var(--bg-main); color: var(--text-main); height: 100vh; displ
 .msg-out { background: var(--bg-msg-out); align-self: flex-end; border-top-right-radius: 0; }
 .msg-in { background: var(--bg-msg-in); align-self: flex-start; border-top-left-radius: 0; }
 .msg-time { font-size: 10px; color: rgba(255,255,255,0.6); float: right; margin: 4px 0 -4px 8px; }
+.msg-sender { font-size: 12px; font-weight: bold; color: var(--accent); margin-bottom: 4px; }
 .chat-input-area { background: var(--bg-header); padding: 10px 16px; display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
 .chat-input { flex: 1; background: var(--bg-main); border: none; border-radius: 20px; padding: 12px 16px; color: var(--text-main); outline: none; font-size: 15px; }
 .send-btn { background: var(--accent); border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
 .send-btn svg { width: 18px; height: 18px; fill: black; margin-left: -2px; }
 
-/* SETTINGS PAGE & SUB PAGES */
+/* TICKS (SVG Icons) */
+.tick-icon { width: 16px; height: 16px; fill: rgba(255,255,255,0.6); vertical-align: middle; margin-left: 4px; }
+.tick-icon.blue { fill: var(--tick-blue); }
+
+/* SETTINGS */
 .settings-page, .sub-page { display: none; flex-direction: column; height: 100%; background: var(--bg-main); position: fixed; inset: 0; z-index: 200; }
 .settings-page.active, .sub-page.active { display: flex; }
 .settings-header { background: var(--bg-header); padding: 15px 16px; display: flex; align-items: center; gap: 15px; }
@@ -180,7 +186,7 @@ input:checked + .slider:before { transform: translateX(20px); }
     <div class="avatar" id="roomAvatar" style="width: 36px; height: 36px; font-size: 14px;">A</div>
     <div class="chat-info">
       <div class="chat-name" id="roomName">Mtu</div>
-      <div class="online-status">online</div>
+      <div class="online-status" id="roomStatus">offline</div>
     </div>
   </div>
   <div class="chat-messages" id="messagesContainer"></div>
@@ -197,26 +203,17 @@ input:checked + .slider:before { transform: translateX(20px); }
     <h2>Settings</h2>
   </div>
   <div class="settings-body">
-    
-    <!-- PROFILE SECTION NA PICHA -->
     <div class="profile-section" onclick="openSubPage('profileSubPage')">
       <div class="profile-avatar" id="settingsAvatar">T</div>
       <div class="profile-name" id="settingsName">T-BERG</div>
       <div class="profile-status">Hey there! I am using Free Chart.</div>
     </div>
-
     <div class="settings-group">
       <div class="settings-item" onclick="openSubPage('accountSubPage')">
         <svg class="settings-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><div class="settings-text">Account</div>
       </div>
       <div class="settings-item" onclick="openSubPage('privacySubPage')">
         <svg class="settings-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg><div class="settings-text">Privacy</div>
-      </div>
-      <div class="settings-item" onclick="openSubPage('notificationsSubPage')">
-        <svg class="settings-icon" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg><div class="settings-text">Notifications</div>
-      </div>
-      <div class="settings-item" onclick="openSubPage('storageSubPage')">
-        <svg class="settings-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg><div class="settings-text">Data and Storage Usage</div>
       </div>
     </div>
     <div class="settings-group">
@@ -233,7 +230,6 @@ input:checked + .slider:before { transform: translateX(20px); }
   <div class="settings-header"><div class="back-btn" onclick="closeSubPage('profileSubPage')" style="cursor:pointer; color:var(--text-main);"><svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div><h2>Profile</h2></div>
   <div class="sub-content">
     <div style="text-align:center; margin-bottom: 20px;">
-      <!-- PREVIEW YA PICHA -->
       <label for="profileImageInput">
         <div class="profile-avatar" id="previewProfileImage" style="margin: 0 auto; width: 100px; height: 100px; background-color: var(--bg-main); cursor: pointer;">
           <svg viewBox="0 0 24 24" style="width: 40px; height: 40px; fill: var(--text-muted);"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
@@ -258,20 +254,6 @@ input:checked + .slider:before { transform: translateX(20px); }
     <div class="toggle-row"><span>Nionekane Nikiwa Online</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
   </div>
 </div>
-<div id="notificationsSubPage" class="sub-page">
-  <div class="settings-header"><div class="back-btn" onclick="closeSubPage('notificationsSubPage')" style="cursor:pointer; color:var(--text-main);"><svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div><h2>Notifications</h2></div>
-  <div class="sub-content">
-    <div class="toggle-row"><span>Show Notifications</span><label class="switch"><input type="checkbox" checked><span class="slider"></span></label></div>
-  </div>
-</div>
-<div id="storageSubPage" class="sub-page">
-  <div class="settings-header"><div class="back-btn" onclick="closeSubPage('storageSubPage')" style="cursor:pointer; color:var(--text-main);"><svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg></div><h2>Data and Storage</h2></div>
-  <div class="sub-content">
-    <div style="text-align:center; margin-bottom:20px;">
-      <div style="width:120px; height:120px; border-radius:50%; border:8px solid var(--accent); margin:0 auto; display:flex; align-items:center; justify-content:center; font-size:18px;">0 KB</div>
-    </div>
-  </div>
-</div>
 
 <script>
 // FIREBASE CONFIG
@@ -292,7 +274,6 @@ let currentUserPhone = "";
 let currentRoomId = "";
 let currentReceiver = "";
 let unsubscribeMessages = null;
-let base64ProfilePic = "";
 
 // LOGIN
 function login() {
@@ -327,20 +308,15 @@ if (localStorage.getItem("freechart_user")) {
   renderChatList();
 }
 
-// PICHA YA PROFILE (PREVIEW & SAVE)
+// PICHA YA PROFILE
 function previewImage(event) {
   const file = event.target.files[0];
   if (file) {
     const reader = new FileReader();
     reader.onload = function(e) {
-      base64ProfilePic = e.target.result;
-      
-      // Update preview
-      document.getElementById("previewProfileImage").style.backgroundImage = `url(${base64ProfilePic})`;
+      document.getElementById("previewProfileImage").style.backgroundImage = `url(${e.target.result})`;
       document.getElementById("previewProfileImage").innerHTML = "";
-      
-      // Update settings avatar
-      document.getElementById("settingsAvatar").style.backgroundImage = `url(${base64ProfilePic})`;
+      document.getElementById("settingsAvatar").style.backgroundImage = `url(${e.target.result})`;
       document.getElementById("settingsAvatar").innerHTML = "";
     };
     reader.readAsDataURL(file);
@@ -364,6 +340,16 @@ function renderChatList() {
         const chat = doc.data();
         const receiverPhone = chat.participants.find(p => p !== currentUserPhone);
         
+        // Ticks kwenye chat list
+        let tickHTML = "";
+        if (chat.lastSender === currentUserPhone) {
+          if (chat.lastRead) {
+            tickHTML = `<svg class="tick-icon blue" viewBox="0 0 16 15"><path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"/></svg>`;
+          } else {
+            tickHTML = `<svg class="tick-icon" viewBox="0 0 16 15"><path d="M10.91 3.316l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"/></svg>`;
+          }
+        }
+        
         const div = document.createElement("div");
         div.className = "chat-item";
         div.onclick = () => openChatRoom(doc.id, receiverPhone);
@@ -373,7 +359,7 @@ function renderChatList() {
           <div class="chat-info">
             <div class="chat-info-left">
               <div class="chat-name">+${receiverPhone}</div>
-              <div class="chat-msg">${chat.lastMessage || 'Anza kuchat...'}</div>
+              <div class="chat-msg">${tickHTML} ${chat.lastMessage || 'Anza kuchat...'}</div>
             </div>
             <div class="chat-meta">
               <div>${chat.lastTime ? new Date(chat.lastTime.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : ''}</div>
@@ -416,6 +402,20 @@ function openChatRoom(chatId, receiverPhone) {
   document.getElementById("roomName").textContent = "+" + receiverPhone;
   document.getElementById("roomAvatar").textContent = receiverPhone.slice(-2);
   
+  // Angalia kama yupo online (Tunatumia documents kwenye collection "presence")
+  db.collection("presence").doc(receiverPhone).onSnapshot(doc => {
+    if(doc.exists && doc.data().isOnline) {
+      document.getElementById("roomStatus").textContent = "online";
+      document.getElementById("roomStatus").style.color = "var(--accent)";
+    } else {
+      document.getElementById("roomStatus").textContent = "offline";
+      document.getElementById("roomStatus").style.color = "var(--text-muted)";
+    }
+  });
+
+  // Weka yeye kama amesoma ujumbe (kama yupo kwenye chumba)
+  db.collection("chats").doc(currentRoomId).update({ lastRead: true });
+
   const container = document.getElementById("messagesContainer");
   container.innerHTML = "";
 
@@ -437,11 +437,28 @@ function openChatRoom(chatId, receiverPhone) {
           time = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         }
 
+        // Ticks logic
+        let tickHTML = "";
+        if (isMe) {
+          if (msg.read) {
+            // Tick mbili (Blue - Amesomea)
+            tickHTML = `<svg class="tick-icon blue" viewBox="0 0 16 15"><path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.879a.32.32 0 0 1-.484.033l-.358-.325a.319.319 0 0 0-.484.032l-.378.483a.418.418 0 0 0 .036.541l1.32 1.266c.143.14.361.125.484-.033l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"/></svg>`;
+          } else {
+            // Tick moja (Imetumwa) au Tick mbili za kijivu (Imefika)
+            tickHTML = `<svg class="tick-icon" viewBox="0 0 16 15"><path d="M10.91 3.316l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.879a.32.32 0 0 1-.484.033L1.891 7.769a.366.366 0 0 0-.515.006l-.423.433a.364.364 0 0 0 .006.514l3.258 3.185c.143.14.361.125.484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"/></svg>`;
+          }
+        }
+
         bubble.innerHTML = `
           ${msg.text}
-          <span class="msg-time">${time}</span>
+          <span class="msg-time">${time} ${tickHTML}</span>
         `;
         container.appendChild(bubble);
+        
+        // Kama ujumbe ni wa mtu mwingine na mimi nipo kwenye chumba, mark as read
+        if (!isMe && !msg.read) {
+           db.collection("chats").doc(currentRoomId).collection("messages").doc(doc.id).update({ read: true });
+        }
       });
       container.scrollTop = container.scrollHeight;
     });
@@ -464,12 +481,15 @@ function sendMessage() {
   db.collection("chats").doc(currentRoomId).collection("messages").add({
     text: text,
     sender: currentUserPhone,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    read: false
   });
 
   db.collection("chats").doc(currentRoomId).update({
     lastMessage: text,
-    lastTime: firebase.firestore.FieldValue.serverTimestamp()
+    lastTime: firebase.firestore.FieldValue.serverTimestamp(),
+    lastSender: currentUserPhone,
+    lastRead: false
   });
 }
 
@@ -494,7 +514,7 @@ function saveProfile() {
   }
 }
 
-// SAVE ACCOUNT (Namba)
+// SAVE ACCOUNT
 function saveAccount() {
   let phone = document.getElementById("inputAccountPhone").value.trim().replace("+","").replace(/\s/g,"");
   if(phone) {
@@ -512,6 +532,19 @@ function logout() {
     localStorage.removeItem("freechart_phone");
     location.reload();
   }
+}
+
+// ============= PRESENCE SYSTEM (KUJUA NANI YUPO ONLINE) =============
+if (localStorage.getItem("freechart_phone")) {
+  const phoneNum = localStorage.getItem("freechart_phone");
+  const presenceRef = db.collection("presence").doc(phoneNum);
+  
+  presenceRef.set({ isOnline: true }, { merge: true });
+  
+  // Kama akifunga browser
+  window.addEventListener('beforeunload', () => {
+    presenceRef.set({ isOnline: false }, { merge: true });
+  });
 }
 </script>
 </body>
