@@ -5,11 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <title>FREE CHART</title>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <style>
 :root {
-  /* WHATSAPP DARK MODE THEME */
   --bg-main: #0b141a;
   --bg-header: #202c33;
   --bg-chat: #0b141a;
@@ -22,52 +20,6 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
 body { background: var(--bg-main); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-/* HEADER */
-.header { background: var(--bg-header); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; z-index: 10; }
-.header h1 { font-size: 20px; font-weight: 600; color: var(--text-main); }
-.header-icons { display: flex; gap: 18px; color: var(--text-main); cursor: pointer; }
-.header-icons svg { width: 22px; height: 22px; fill: currentColor; }
-
-/* TABS */
-.tabs { display: flex; background: var(--bg-header); flex-shrink: 0; }
-.tab { flex: 1; text-align: center; padding: 12px 0; font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; border-bottom: 3px solid transparent; text-transform: uppercase; letter-spacing: 0.5px; }
-.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-
-/* CONTENT AREA */
-.content { flex: 1; overflow-y: auto; position: relative; }
-.view { display: none; height: 100%; overflow-y: auto; }
-.view.active { display: block; }
-
-/* CHATS LIST */
-.chat-item { display: flex; align-items: center; padding: 12px 16px; cursor: pointer; transition: background 0.2s; }
-.chat-item:hover { background: rgba(255,255,255,0.05); }
-.avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--bg-header); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-muted); margin-right: 15px; flex-shrink: 0; }
-.chat-info { flex: 1; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center; overflow: hidden; }
-.chat-item:last-child .chat-info { border-bottom: none; padding-bottom: 0; }
-.chat-info-left { flex: 1; overflow: hidden; }
-.chat-name { font-size: 16px; margin-bottom: 4px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.chat-msg { font-size: 13px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.chat-meta { text-align: right; font-size: 12px; color: var(--text-muted); margin-left: 10px; flex-shrink: 0; }
-
-/* FLOATING BUTTON */
-.fab { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5); cursor: pointer; z-index: 20; }
-.fab svg { width: 24px; height: 24px; fill: white; }
-
-/* CHAT ROOM */
-.chat-room { display: none; flex-direction: column; height: 100%; position: fixed; inset: 0; background: var(--bg-chat); z-index: 100; }
-.chat-room.active { display: flex; }
-.chat-header { background: var(--bg-header); padding: 10px 16px; display: flex; align-items: center; gap: 15px; flex-shrink: 0; }
-.back-btn { cursor: pointer; color: var(--text-main); display: flex; align-items: center; }
-.chat-messages { flex: 1; overflow-y: auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 4px; }
-.msg-bubble { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; line-height: 1.4; position: relative; word-wrap: break-word; }
-.msg-out { background: var(--bg-msg-out); align-self: flex-end; border-top-right-radius: 0; }
-.msg-in { background: var(--bg-msg-in); align-self: flex-start; border-top-left-radius: 0; }
-.msg-time { font-size: 10px; color: rgba(255,255,255,0.6); float: right; margin: 4px 0 -4px 8px; }
-.chat-input-area { background: var(--bg-header); padding: 10px 16px; display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
-.chat-input { flex: 1; background: var(--bg-chat); border: none; border-radius: 20px; padding: 12px 16px; color: var(--text-main); outline: none; font-size: 15px; }
-.send-btn { background: var(--accent); border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
-.send-btn svg { width: 18px; height: 18px; fill: white; margin-left: -2px; }
-
 /* LOGIN MODAL */
 .modal { display: none; position: fixed; inset: 0; background: var(--bg-main); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
 .modal.active { display: flex; }
@@ -77,10 +29,50 @@ body { background: var(--bg-main); color: var(--text-main); height: 100vh; displ
 .login-box input { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 8px; border: none; background: var(--bg-header); color: white; font-size: 16px; outline: none; text-align: center; }
 .login-box button { width: 100%; padding: 14px; border-radius: 8px; border: none; background: var(--accent); color: white; font-size: 16px; font-weight: 600; cursor: pointer; }
 
-/* STATUS VIEW */
-.status-item { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 15px; cursor: pointer; }
-.status-ring { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--accent); padding: 2px; }
-.status-ring div { width: 100%; height: 100%; border-radius: 50%; background: var(--bg-header); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-main); }
+/* HEADER */
+.header { background: var(--bg-header); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; z-index: 10; }
+.header h1 { font-size: 20px; font-weight: 600; color: var(--text-main); }
+.header-icons { display: flex; gap: 18px; color: var(--text-main); cursor: pointer; }
+.header-icons svg { width: 22px; height: 22px; fill: currentColor; }
+
+/* CONTENT AREA */
+.content { flex: 1; overflow-y: auto; position: relative; }
+
+/* CHAT ROOM */
+.chat-room { display: flex; flex-direction: column; height: 100%; background: var(--bg-chat); }
+.chat-header { background: var(--bg-header); padding: 10px 16px; display: flex; align-items: center; gap: 15px; flex-shrink: 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-main); display: flex; align-items: center; justify-content: center; font-size: 16px; color: var(--text-muted); }
+.chat-name { font-size: 16px; font-weight: 600; }
+.online-status { font-size: 12px; color: var(--accent); }
+
+.chat-messages { flex: 1; overflow-y: auto; padding: 20px 16px; display: flex; flex-direction: column; gap: 8px; }
+.msg-bubble { max-width: 80%; padding: 8px 12px; border-radius: 8px; font-size: 14.5px; line-height: 1.4; position: relative; word-wrap: break-word; }
+.msg-out { background: var(--bg-msg-out); align-self: flex-end; border-top-right-radius: 0; }
+.msg-in { background: var(--bg-msg-in); align-self: flex-start; border-top-left-radius: 0; }
+.msg-time { font-size: 10px; color: rgba(255,255,255,0.6); float: right; margin: 4px 0 -4px 8px; }
+.msg-sender { font-size: 12px; font-weight: bold; color: var(--accent); margin-bottom: 4px; }
+
+.chat-input-area { background: var(--bg-header); padding: 10px 16px; display: flex; gap: 10px; align-items: center; flex-shrink: 0; }
+.chat-input { flex: 1; background: var(--bg-chat); border: none; border-radius: 20px; padding: 12px 16px; color: var(--text-main); outline: none; font-size: 15px; }
+.send-btn { background: var(--accent); border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.send-btn svg { width: 18px; height: 18px; fill: white; margin-left: -2px; }
+
+/* SETTINGS PAGE */
+.settings-page { display: none; flex-direction: column; height: 100%; background: var(--bg-main); position: fixed; inset: 0; z-index: 200; }
+.settings-page.active { display: flex; }
+.settings-header { background: var(--bg-header); padding: 15px 16px; display: flex; align-items: center; gap: 15px; }
+.settings-header h2 { font-size: 18px; font-weight: 600; }
+.settings-body { flex: 1; overflow-y: auto; padding-bottom: 20px; }
+.profile-section { display: flex; flex-direction: column; align-items: center; padding: 30px 20px; background: var(--bg-header); margin-bottom: 15px; }
+.profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--bg-main); display: flex; align-items: center; justify-content: center; font-size: 32px; color: var(--text-muted); margin-bottom: 15px; }
+.profile-name { font-size: 20px; font-weight: 600; color: var(--text-main); }
+.profile-status { font-size: 14px; color: var(--text-muted); margin-top: 5px; }
+
+.settings-group { background: var(--bg-header); margin-bottom: 15px; }
+.settings-item { display: flex; align-items: center; padding: 15px 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.settings-item:last-child { border-bottom: none; }
+.settings-icon { width: 24px; height: 24px; fill: var(--text-muted); margin-right: 20px; }
+.settings-text { font-size: 16px; color: var(--text-main); flex: 1; }
 </style>
 </head>
 <body>
@@ -98,67 +90,85 @@ body { background: var(--bg-main); color: var(--text-main); height: 100vh; displ
 <!-- HEADER -->
 <div class="header">
   <h1>FREE CHART</h1>
-  <div class="header-icons" onclick="alert('Settings: Profile, Privacy, Notifications')">
+  <div class="header-icons" onclick="openSettings()">
+    <!-- Settings Icon (Gear) -->
     <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
   </div>
 </div>
 
-<!-- TABS -->
-<div class="tabs">
-  <div class="tab active" onclick="switchTab('chats', this)">Chats</div>
-  <div class="tab" onclick="switchTab('calls', this)">Calls</div>
-  <div class="tab" onclick="switchTab('status', this)">Status</div>
-</div>
-
-<!-- CONTENT -->
+<!-- MAIN CONTENT -->
 <div class="content">
-  <!-- CHATS VIEW -->
-  <div id="chatsView" class="view active">
-    <div id="chatList"></div>
-    <div class="fab" onclick="alert('Kutengeneza group/chats mpya')">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-    </div>
-  </div>
-
-  <!-- CALLS VIEW -->
-  <div id="callsView" class="view">
-    <div style="padding: 20px; text-align: center; color: var(--text-muted); margin-top: 50px;">
-      <svg viewBox="0 0 24 24" style="width: 60px; height: 60px; fill: currentColor; margin-bottom: 15px;"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
-      <p>Hakuna simu bado.</p>
-    </div>
-  </div>
-
-  <!-- STATUS VIEW -->
-  <div id="statusView" class="view">
-    <div class="status-item" onclick="alert('Ongeza Status yako mpya')">
-      <div class="status-ring"><div>+</div></div>
+  <div class="chat-room">
+    <div class="chat-header">
+      <div class="avatar">🌍</div>
       <div>
-        <div class="chat-name">Status Yangu</div>
-        <div class="chat-msg">Bonyeza kuongeza</div>
+        <div class="chat-name">Public Chat</div>
+        <div class="online-status">Watu Wote Duniani</div>
       </div>
     </div>
+
+    <div class="chat-messages" id="messagesContainer"></div>
+    
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="msgInput" placeholder="Andika ujumbe wako hapa..." onkeypress="handleEnter(event)" />
+      <button class="send-btn" onclick="sendMessage()">
+        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      </button>
+    </div>
   </div>
 </div>
 
-<!-- CHAT ROOM (HIDDEN) -->
-<div id="chatRoom" class="chat-room">
-  <div class="chat-header">
-    <div class="back-btn" onclick="closeChat()">
+<!-- SETTINGS PAGE (HIDDEN BY DEFAULT) -->
+<div id="settingsPage" class="settings-page">
+  <div class="settings-header">
+    <div class="back-btn" onclick="closeSettings()" style="cursor:pointer; color:var(--text-main);">
       <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: currentColor;"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
     </div>
-    <div class="avatar" style="width: 36px; height: 36px; font-size: 14px; margin: 0;" id="roomAvatar">A</div>
-    <div class="chat-name" id="roomName" style="font-size: 16px; flex:1;">Alex</div>
-    <div style="display:flex; gap:15px;">
-      <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: var(--accent); cursor:pointer;" onclick="alert('Kupiga simu sauti (Inahitaji WebRTC)')"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
-      <svg viewBox="0 0 24 24" style="width: 22px; height: 22px; fill: var(--accent); cursor:pointer;" onclick="alert('Video Call (Inahitaji WebRTC)')"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
-    </div>
+    <h2>Settings</h2>
   </div>
-  <div class="chat-messages" id="messagesContainer"></div>
-  <div class="chat-input-area">
-    <input type="text" class="chat-input" id="msgInput" placeholder="Andika ujumbe..." onkeypress="handleEnter(event)" />
-    <button class="send-btn" onclick="sendMessage()">
-      <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-    </button>
+  <div class="settings-body">
+    
+    <!-- Profile Section -->
+    <div class="profile-section" onclick="alert('Badilisha Jina/Picha (Inakuja hivi karibuni)')">
+      <div class="profile-avatar" id="settingsAvatar">T</div>
+      <div class="profile-name" id="settingsName">T-BERG</div>
+      <div class="profile-status">Hey there! I am using Free Chart.</div>
+    </div>
+
+    <!-- Settings Groups -->
+    <div class="settings-group">
+      <div class="settings-item" onclick="alert('Account Settings')">
+        <svg class="settings-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        <div class="settings-text">Account</div>
+      </div>
+      <div class="settings-item" onclick="alert('Privacy Settings')">
+        <svg class="settings-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+        <div class="settings-text">Privacy</div>
+      </div>
+      <div class="settings-item" onclick="alert('Notifications')">
+        <svg class="settings-icon" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+        <div class="settings-text">Notifications</div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-item" onclick="alert('Data and Storage Usage')">
+        <svg class="settings-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+        <div class="settings-text">Data and Storage Usage</div>
+      </div>
+      <div class="settings-item" onclick="alert('App Language')">
+        <svg class="settings-icon" viewBox="0 0 24 24"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+        <div class="settings-text">App Language</div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-item" onclick="logout()">
+        <svg class="settings-icon" viewBox="0 0 24 24" style="fill: #ff4444;"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+        <div class="settings-text" style="color: #ff4444;">Log Out</div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -177,78 +187,66 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 let currentUser = "";
-let currentRoomId = "";
-
-// DUMMY CONTACTS
-const contacts = [
-  { id: "1", name: "Alex", msg: "Upo?", time: "12:30" },
-  { id: "2", name: "Maria", msg: "Sawa nitakuja", time: "11:15" }
-];
+let unsubscribeMessages = null;
 
 // LOGIN
 function login() {
   const name = document.getElementById("usernameInput").value.trim();
-  if (!name) return alert("Weka jina lako");
+  if (!name) return alert("Weka jina lako kuanza");
+  
   currentUser = name;
   localStorage.setItem("freechart_user", name);
   document.getElementById("loginModal").classList.remove("active");
-  renderContacts();
+  
+  // Update settings profile text
+  document.getElementById("settingsName").textContent = name;
+  document.getElementById("settingsAvatar").textContent = name.charAt(0).toUpperCase();
+  
+  loadMessages();
 }
 
-// CHECK IF ALREADY LOGGED IN
+// LOGOUT
+function logout() {
+  if(confirm("Una uhakika unataka kutoka?")) {
+    localStorage.removeItem("freechart_user");
+    if (unsubscribeMessages) unsubscribeMessages();
+    location.reload();
+  }
+}
+
+// CHECK LOGIN
 if (localStorage.getItem("freechart_user")) {
   currentUser = localStorage.getItem("freechart_user");
   document.getElementById("loginModal").classList.remove("active");
-  renderContacts();
+  document.getElementById("settingsName").textContent = currentUser;
+  document.getElementById("settingsAvatar").textContent = currentUser.charAt(0).toUpperCase();
+  loadMessages();
 }
 
-// TABS
-function switchTab(tab, el) {
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-  el.classList.add("active");
-  document.getElementById(tab + "View").classList.add("active");
+// SETTINGS UI
+function openSettings() {
+  document.getElementById("settingsPage").classList.add("active");
+}
+function closeSettings() {
+  document.getElementById("settingsPage").classList.remove("active");
 }
 
-// RENDER CONTACTS
-function renderContacts() {
-  const list = document.getElementById("chatList");
-  list.innerHTML = "";
-  contacts.forEach(c => {
-    const div = document.createElement("div");
-    div.className = "chat-item";
-    div.onclick = () => openChat(c);
-    div.innerHTML = `
-      <div class="avatar">${c.name.charAt(0).toUpperCase()}</div>
-      <div class="chat-info">
-        <div class="chat-info-left">
-          <div class="chat-name">${c.name}</div>
-          <div class="chat-msg">${c.msg}</div>
-        </div>
-        <div class="chat-meta">${c.time}</div>
-      </div>
-    `;
-    list.appendChild(div);
-  });
-}
-
-// OPEN CHAT
-function openChat(contact) {
-  currentRoomId = "room_" + contact.id;
-  document.getElementById("chatRoom").classList.add("active");
-  document.getElementById("roomName").textContent = contact.name;
-  document.getElementById("roomAvatar").textContent = contact.name.charAt(0).toUpperCase();
-  
+// LOAD MESSAGES
+function loadMessages() {
   const container = document.getElementById("messagesContainer");
-  container.innerHTML = "";
+  container.innerHTML = "<div style='text-align:center; color:#8696a0; font-size:13px; margin-top:20px;'>Inapakia ujumbe...</div>";
 
-  db.collection("messages").doc(currentRoomId).collection("chats").orderBy("timestamp", "asc")
+  unsubscribeMessages = db.collection("global_chat").orderBy("timestamp", "asc")
     .onSnapshot(snapshot => {
       container.innerHTML = "";
+      
+      if(snapshot.empty) {
+        container.innerHTML = "<div style='text-align:center; color:#8696a0; font-size:13px; margin-top:20px;'>Hakuna ujumbe bado. Anza kuchat!</div>";
+      }
+
       snapshot.forEach(doc => {
         const msg = doc.data();
         const isMe = msg.sender === currentUser;
-        
         const bubble = document.createElement("div");
         bubble.className = `msg-bubble ${isMe ? "msg-out" : "msg-in"}`;
         
@@ -259,7 +257,7 @@ function openChat(contact) {
         }
 
         bubble.innerHTML = `
-          ${!isMe ? `<div style="font-size: 12px; font-weight: bold; color: var(--accent); margin-bottom: 4px;">${msg.sender}</div>` : ''}
+          ${!isMe ? `<div class="msg-sender">${msg.sender}</div>` : ''}
           ${msg.text}
           <span class="msg-time">${time}</span>
         `;
@@ -269,24 +267,21 @@ function openChat(contact) {
     });
 }
 
-function closeChat() {
-  document.getElementById("chatRoom").classList.remove("active");
-  currentRoomId = "";
-}
-
 // SEND MESSAGE
 function sendMessage() {
   const input = document.getElementById("msgInput");
   const text = input.value.trim();
-  if (!text || !currentRoomId || !currentUser) return;
+  if (!text || !currentUser) return;
 
-  db.collection("messages").doc(currentRoomId).collection("chats").add({
+  input.value = "";
+
+  db.collection("global_chat").add({
     text: text,
     sender: currentUser,
     timestamp: firebase.firestore.FieldValue.serverTimestamp()
-  }).then(() => {
-    input.value = "";
-  }).catch(err => alert("Error: " + err.message));
+  }).catch(err => {
+    alert("Imeshindikana kutuma: " + err.message);
+  });
 }
 
 function handleEnter(e) {
